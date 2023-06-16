@@ -101,9 +101,9 @@ app.on("activate", function () {
 //   autoUpdater.quitAndInstall();
 // });
 
-app.whenReady().then(() => {
-  autoUpdater.checkForUpdatesAndNotify();
-});
+// app.whenReady().then(() => {
+//   autoUpdater.checkForUpdatesAndNotify();
+// });
 
 autoUpdater.on("update-not-available", (info) => {
   console.log(`No update available. Current version ${app.getVersion()}`);
@@ -134,7 +134,7 @@ autoUpdater.on("update-available", (info) => {
 
 // Handle the update-downloaded event
 autoUpdater.on("update-downloaded", (info) => {
-  log.info("update-Downloaded" + info);
+  log.info("update-Downloaded" + JSON.stringify(info));
   dialog
     .showMessageBox({
       type: "info",
@@ -165,7 +165,7 @@ autoUpdater.on("download-progress", (progressObj) => {
 
 autoUpdater.on("error", (info) => {
   console.log(info);
-  log.info("Error Raised", JSON.stringify(info));
+  log.info(JSON.stringify(info));
 });
 
 function logger(s) {
