@@ -1,39 +1,67 @@
 {
-    "name": "electron-updater",
-    "version": "1.4.0",
-    "description": "New Electron Updater Application",
-    "main": "index.js",
-    "scripts": {
-        "start": "electron .",
-        "watch": "nodemon --exec electron ."
+  "name": "electron-updater",
+  "version": "1.5.0",
+  "description": "New Electron Updater Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "watch": "nodemon --exec electron .",
+    "build": "rm -rf dist && electron-builder --mac",
+    "build:all": "rm -rf dist && electron-builder -mwl",
+    "build:win": "electron-builder --win",
+    "build:linux": "rm -rf dist && electron-builder --linux"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Dushyant Khoda",
+    "email": "dushyant@yopmail.com"
+  },
+  "homepage": "https://example.com",
+  "license": "ISC",
+  "dependencies": {
+    "electron-log": "^4.4.8",
+    "electron-updater": "^5.3.0"
+  },
+  "repository": "https://github.com/Dushyant-Khoda/auto-updater-electron",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
+  "build": {
+    "appId": "com.demo.autoupdater",
+    "productName": "Autoupdater",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
-    "keywords": [],
-    "author": "Dushyant Khoda",
-    "license": "ISC",
-    "dependencies": {
-        "electron-log": "^4.4.8",
-        "electron-updater": "^5.3.0"
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
     },
-    "repository": "https://github.com/Dushyant-Khoda/auto-updater-electron",
-    "publish": {
-        "provider": "github",
-        "releaseType": "release"
+    "linux": {
+      "icon": "build/icon.ico",
+      "category": "Utility",
+      "mimeTypes": [
+        "x-scheme-handler/autoupdater"
+      ],
+      "desktop": {
+        "exec": "autoupdater %U"
+      },
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     },
-    "build": {
-        "appId": "com.demo.autoupdater",
-        "productName": "Autoupdater",
-        "win": {
-            "target": "nsis"
-        },
-        "mac": {
-            "target": ""
-        },
-        "directories": {
-            "output": "dist"
-        }
-    },
-    "devDependencies": {
-        "electron": "^25.1.1",
-        "electron-builder": "^24.4.0"
+    "directories": {
+      "output": "dist"
     }
+  },
+  "devDependencies": {
+    "electron": "^25.1.1",
+    "electron-builder": "^24.4.0"
+  }
 }
