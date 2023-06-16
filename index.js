@@ -4,16 +4,24 @@ const path = require("path");
 const url = require("url");
 const { autoUpdater, AppUpdater } = require("electron-updater");
 const log = require("electron-log");
+const { platform } = require("os");
 
 //Basic flags
 const userDataPath = app.getPath("userData");
 autoUpdater.autoDownload = true;
-const githubReleaseURL =
-  "https://github.com/Dushyant-Khoda/auto-updater-electron/releases";
-autoUpdater.setFeedURL({ url: githubReleaseURL });
+if (process.platform != "darwin") {
+  const githubReleaseURL =
+    "https://github.com/Dushyant-Khoda/auto-updater-electron/releases/latest";
+  autoUpdater.setFeedURL(githubReleaseURL);
+}
 autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.autoRunAppAfterInstall = true;
-const customPath = userDataPath.trim() + "/logs/main.log";
+let customPath;
+if (process.platform == "win32") {
+  customPath = userDataPath.trim() + "\\logs\\main.log";
+} else {
+  customPath = userDataPath.trim() + "/logs/main.log";
+}
 
 log.transports.file.resolvePath = () => path.join(customPath);
 console.log(customPath);
@@ -105,7 +113,7 @@ autoUpdater.on("update-not-available", (info) => {
 
 // Handle the update-available event
 autoUpdater.on("update-available", (info) => {
-  log.info("update-available" + info);
+  log.info("update-available" + JSON.stringify(info));
   dialog
     .showMessageBox({
       type: "info",
@@ -157,7 +165,7 @@ autoUpdater.on("download-progress", (progressObj) => {
 
 autoUpdater.on("error", (info) => {
   console.log(info);
-  log.info(JSON.stringify(info));
+  log.info("Error Raised", JSON.stringify(info));
 });
 
 function logger(s) {

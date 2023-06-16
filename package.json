@@ -1,6 +1,6 @@
 {
   "name": "electron-updater",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "New Electron Updater Application",
   "main": "index.js",
   "scripts": {
