@@ -1,16 +1,39 @@
 {
-  "name": "autoupdater",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "electron": "^25.1.1",
-    "electron-updater": "^5.3.0"
-  }
+    "name": "electron-updater",
+    "version": "1.4.0",
+    "description": "New Electron Updater Application",
+    "main": "index.js",
+    "scripts": {
+        "start": "electron .",
+        "watch": "nodemon --exec electron ."
+    },
+    "keywords": [],
+    "author": "Dushyant Khoda",
+    "license": "ISC",
+    "dependencies": {
+        "electron-log": "^4.4.8",
+        "electron-updater": "^5.3.0"
+    },
+    "repository": "https://github.com/Dushyant-Khoda/auto-updater-electron",
+    "publish": {
+        "provider": "github",
+        "releaseType": "release"
+    },
+    "build": {
+        "appId": "com.demo.autoupdater",
+        "productName": "Autoupdater",
+        "win": {
+            "target": "nsis"
+        },
+        "mac": {
+            "target": ""
+        },
+        "directories": {
+            "output": "dist"
+        }
+    },
+    "devDependencies": {
+        "electron": "^25.1.1",
+        "electron-builder": "^24.4.0"
+    }
 }
