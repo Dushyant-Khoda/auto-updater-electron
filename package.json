@@ -1,6 +1,6 @@
 {
-  "name": "electron-updater",
-  "version": "1.6.0",
+  "name": "electron-updater-report-repo",
+  "version": "1.8.0",
   "description": "New Electron Updater Application",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "build": {
     "appId": "com.demo.autoupdater",
-    "productName": "Autoupdater",
+    "productName": "Ubuntu Autoupdater",
     "mac": {
       "target": [
         "dmg",

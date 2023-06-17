@@ -1,19 +1,12 @@
 const { app, BrowserWindow, dialog } = require("electron");
-const updater = require("electron-updater");
 const path = require("path");
-const url = require("url");
-const { autoUpdater, AppUpdater } = require("electron-updater");
 const log = require("electron-log");
-const { platform } = require("os");
 
+const { autoUpdater } = require("electron-updater");
 //Basic flags
 const userDataPath = app.getPath("userData");
 autoUpdater.autoDownload = true;
-if (process.platform != "darwin") {
-  const githubReleaseURL =
-    "https://github.com/Dushyant-Khoda/auto-updater-electron/releases/latest";
-  autoUpdater.setFeedURL(githubReleaseURL);
-}
+
 autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.autoRunAppAfterInstall = true;
 let customPath;
@@ -31,6 +24,7 @@ log.transports.file.format = `${new Date().toLocaleString()} > {level} : {text}`
 // autoUpdater
 let mainWindow;
 const createWindow = () => {
+  debugger;
   log.info("Application Initialized");
   mainWindow = new BrowserWindow({
     width: 700,
@@ -60,7 +54,7 @@ const createWindow = () => {
   });
   logger(userDataPath, "/logs/main.log");
 
-  autoUpdater.checkForUpdates();
+  // autoUpdater.checkForUpdates();
   mainWindow.loadFile("view.html");
 };
 // @info:- Quit when all windows are closed.
@@ -79,6 +73,90 @@ app.on("activate", function () {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+app.whenReady().then(() => {
+  // Set the update server URL
+  log.info("Application Initialized WhenReady ");
+  if (process.platform == "linux") {
+    autoUpdater.setFeedURL({
+      provider: "github",
+      repo: "auto-updater-electron",
+      owner: "Dushyant-Khoda",
+      private: false,
+    });
+  }
+
+  // Check for updates
+  autoUpdater.checkForUpdates();
+  autoUpdater.on("update-not-available", (info) => {
+    debugger;
+    console.log(`No update available. Current version ${app.getVersion()}`);
+    log.info(`No update available. Current version ${app.getVersion()}`);
+    log.info("line:71 " + JSON.stringify(info));
+  });
+
+  // Handle the update-available event
+  autoUpdater.on("update-available", (info) => {
+    debugger;
+    log.info("update-available" + JSON.stringify(info));
+    dialog
+      .showMessageBox({
+        type: "info",
+        title: "Update available",
+        message:
+          "A new version of the app is available. Do you want to download it?",
+        buttons: ["Yes", "No"],
+        defaultId: 0,
+      })
+      .then(({ response }) => {
+        if (response === 0) {
+          autoUpdater.downloadUpdate();
+        } else {
+          autoUpdater.downloadUpdate();
+        }
+      });
+  });
+
+  // Handle the update-downloaded event
+  autoUpdater.on("update-downloaded", (info) => {
+    debugger;
+    log.info("update-Downloaded" + JSON.stringify(info));
+    dialog
+      .showMessageBox({
+        type: "info",
+        title: "Update downloaded",
+        message: "A new version has been downloaded. Quit and install now?",
+        buttons: ["Yes", "No"],
+        defaultId: 0,
+      })
+      .then(({ response }) => {
+        if (response === 0) {
+          autoUpdater.quitAndInstall();
+        }
+      });
+  });
+
+  autoUpdater.on("download-progress", (progressObj) => {
+    debugger;
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+    log_message =
+      log_message +
+      " (" +
+      progressObj.transferred +
+      "/" +
+      progressObj.total +
+      ")";
+    log.info(log_message);
+  });
+
+  autoUpdater.on("error", (info) => {
+    debugger;
+    console.log(info);
+    log.info(JSON.stringify(info));
+  });
+  log.info("Application Initialized WhenReady End");
 });
 
 // autoUpdater.on("update-available", (info) => {
@@ -105,69 +183,6 @@ app.on("activate", function () {
 // app.whenReady().then(() => {
 //   autoUpdater.checkForUpdatesAndNotify();
 // });
-
-autoUpdater.on("update-not-available", (info) => {
-  console.log(`No update available. Current version ${app.getVersion()}`);
-  log.info(`No update available. Current version ${app.getVersion()}`);
-  log.info("line:71 " + JSON.stringify(info));
-});
-
-// Handle the update-available event
-autoUpdater.on("update-available", (info) => {
-  log.info("update-available" + JSON.stringify(info));
-  dialog
-    .showMessageBox({
-      type: "info",
-      title: "Update available",
-      message:
-        "A new version of the app is available. Do you want to download it?",
-      buttons: ["Yes", "No"],
-      defaultId: 0,
-    })
-    .then(({ response }) => {
-      if (response === 0) {
-        autoUpdater.downloadUpdate();
-      } else {
-        autoUpdater.downloadUpdate();
-      }
-    });
-});
-
-// Handle the update-downloaded event
-autoUpdater.on("update-downloaded", (info) => {
-  log.info("update-Downloaded" + JSON.stringify(info));
-  dialog
-    .showMessageBox({
-      type: "info",
-      title: "Update downloaded",
-      message: "A new version has been downloaded. Quit and install now?",
-      buttons: ["Yes", "No"],
-      defaultId: 0,
-    })
-    .then(({ response }) => {
-      if (response === 0) {
-        autoUpdater.quitAndInstall();
-      }
-    });
-});
-
-autoUpdater.on("download-progress", (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-  log_message =
-    log_message +
-    " (" +
-    progressObj.transferred +
-    "/" +
-    progressObj.total +
-    ")";
-  log.info(log_message);
-});
-
-autoUpdater.on("error", (info) => {
-  console.log(info);
-  log.info(JSON.stringify(info));
-});
 
 function logger(s) {
   console.log("Logger", s);
