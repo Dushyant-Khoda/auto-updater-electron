@@ -77,7 +77,7 @@ app.on("activate", function () {
 
 app.whenReady().then(() => {
   // Set the update server URL
-  log.info("Application Initialized WhenReady ");
+  log.info("Application Initialized WhenReady 1.8.0");
   if (process.platform == "linux") {
     autoUpdater.setFeedURL({
       provider: "github",
@@ -156,7 +156,7 @@ app.whenReady().then(() => {
     console.log(info);
     log.info(JSON.stringify(info));
   });
-  log.info("Application Initialized WhenReady End");
+  log.info("Application Initialized WhenReady End 1.8.0");
 });
 
 // autoUpdater.on("update-available", (info) => {
