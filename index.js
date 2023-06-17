@@ -31,6 +31,7 @@ log.transports.file.format = `${new Date().toLocaleString()} > {level} : {text}`
 // autoUpdater
 let mainWindow;
 const createWindow = () => {
+  log.info("Application Initialized");
   mainWindow = new BrowserWindow({
     width: 700,
     height: 700,
